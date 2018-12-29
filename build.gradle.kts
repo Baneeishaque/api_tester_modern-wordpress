@@ -17,7 +17,8 @@ repositories {
 }
 
 dependencies {
-    implementation("com.squareup.okhttp:okhttp:2.5.0")
+    implementation("com.squareup.okhttp3:okhttp:3.12.1")
+    implementation("org.json:json:20180813")
     testCompile("junit", "junit", "4.12")
 }
 
