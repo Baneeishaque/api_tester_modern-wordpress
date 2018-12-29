@@ -26,3 +26,13 @@ configure<JavaPluginConvention> {
     sourceCompatibility = JavaVersion.VERSION_1_8
 }
 
+tasks {
+
+    withType<Jar> {
+
+        manifest {
+
+            attributes(mapOf("Main-Class" to application.mainClassName))
+        }
+    }
+}

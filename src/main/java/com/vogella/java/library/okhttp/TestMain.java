@@ -5,10 +5,15 @@ import org.json.JSONArray;
 import org.json.JSONException;
 
 import java.io.IOException;
+import java.util.concurrent.TimeUnit;
 
 public class TestMain {
 
-    static OkHttpClient client = new OkHttpClient();
+    static OkHttpClient client = new OkHttpClient.Builder()
+            // .connectTimeout(660, TimeUnit.SECONDS)
+            // .writeTimeout(660, TimeUnit.SECONDS)
+            .readTimeout(660, TimeUnit.SECONDS)
+            .build();
 
     // code request code here
     String doGetRequest(String url) throws IOException {
@@ -59,7 +64,8 @@ public class TestMain {
         try {
 
             JSONArray jsonArray = new JSONArray(getResponse);
-//            System.out.println("\n\njsonArray: " + jsonArray);
+            System.out.println("\n\njsonArray: " + jsonArray);
+            System.out.println("No. of Agents : " + jsonArray.length());
 
             if (jsonArray.getJSONObject(0).getString("status").equals("0")) {
 
@@ -93,7 +99,7 @@ public class TestMain {
 
                     RequestBody requestBody = new MultipartBody.Builder()
                             .setType(MultipartBody.FORM)
-                            .addFormDataPart("start_date", "2018-10-07")
+                            .addFormDataPart("start_date", "2018-10-06")
                             .addFormDataPart("end_date", "2018-12-29")
                             .addFormDataPart("agent", jsonArray.getJSONObject(i).getString("username"))
                             .build();
