@@ -1,4 +1,4 @@
-package com.vogella.java.library.okhttp;
+package api_tester.modern_wordpress;
 
 import org.json.JSONArray;
 
@@ -8,7 +8,7 @@ public class Generate_SQL {
 
     public static void main(String[] args) {
 
-        TestMain example = new TestMain();
+        Generate_Payment_Reports example = new Generate_Payment_Reports();
 
         try {
 

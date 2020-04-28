@@ -1,13 +1,15 @@
-package com.vogella.java.library.okhttp;
+package api_tester.modern_wordpress;
 
 import okhttp3.*;
 import org.json.JSONArray;
 import org.json.JSONException;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.concurrent.TimeUnit;
 
-public class TestMain {
+public class Generate_Payment_Reports {
 
     static OkHttpClient client = new OkHttpClient.Builder()
             // .connectTimeout(660, TimeUnit.SECONDS)
@@ -56,7 +58,7 @@ public class TestMain {
     public static void main(String[] args) throws IOException {
 
         // issue the Get request
-        TestMain example = new TestMain();
+        Generate_Payment_Reports example = new Generate_Payment_Reports();
 //        String getResponse = example.doGetRequest("http://www.vogella.com");
         String getResponse = example.doGetRequest("http://139.59.65.128/lottery_server/http_API/admin/get_main_agents.php");
 //        System.out.println(getResponse);
@@ -64,7 +66,7 @@ public class TestMain {
         try {
 
             JSONArray jsonArray = new JSONArray(getResponse);
-            System.out.println("\n\njsonArray: " + jsonArray);
+//            System.out.println("\n\njsonArray: " + jsonArray);
             System.out.println("No. of Agents : " + jsonArray.length());
 
             if (jsonArray.getJSONObject(0).getString("status").equals("0")) {
@@ -97,20 +99,32 @@ public class TestMain {
 //                        }
 //                    });
 
-                    RequestBody requestBody = new MultipartBody.Builder()
-                            .setType(MultipartBody.FORM)
-                            .addFormDataPart("start_date", "2018-10-06")
-                            .addFormDataPart("end_date", "2018-12-29")
-                            .addFormDataPart("agent", jsonArray.getJSONObject(i).getString("username"))
-                            .build();
+//                    RequestBody requestBody = new MultipartBody.Builder()
+//                            .setType(MultipartBody.FORM)
+//                            .addFormDataPart("start_date", "2018-10-06")
+//                            .addFormDataPart("end_date", "2018-12-29")
+//                            .addFormDataPart("agent", jsonArray.getJSONObject(i).getString("username"))
+//                            .build();
+//
+//                    Request request = new Request.Builder()
+//                            .url("http://139.59.65.128/lottery_server/http_API/pos/main/get_payment_main.php")
+//                            .post(requestBody)
+//                            .build();
+//
+//                    Response response = client.newCall(request).execute();
+//                    System.out.println(response.body().string());
 
-                    Request request = new Request.Builder()
-                            .url("http://139.59.65.128/lottery_server/http_API/pos/main/get_payment_main.php")
-                            .post(requestBody)
-                            .build();
-
-                    Response response = client.newCall(request).execute();
-                    System.out.println(response.body().string());
+                    ProcessBuilder builder = new ProcessBuilder(
+                            "cmd.exe", "/c", "http --timeout=360 --ignore-stdin --form POST http://139.59.65.128/lottery_server/http_API/pos/main/get_payment_main.php start_date=2018-10-06 end_date=2018-12-30 agent="+jsonArray.getJSONObject(i).getString("username")+"");
+                    builder.redirectErrorStream(true);
+                    Process p = builder.start();
+                    BufferedReader r = new BufferedReader(new InputStreamReader(p.getInputStream()));
+                    String line;
+                    while (true) {
+                        line = r.readLine();
+                        if (line == null) { break; }
+                        System.out.println(line);
+                    }
 
                 }
 
